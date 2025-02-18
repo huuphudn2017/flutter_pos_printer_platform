@@ -52,7 +52,7 @@ class USBPrinterAdapter private constructor() {
                     if (intent.getBooleanExtra(UsbManager.EXTRA_PERMISSION_GRANTED, false)) {
                         Log.i(
                             LOG_TAG,
-                            "Success get permission for device " + usbDevice?.deviceId + ", vendor_id: " + usbDevice.vendorId + " product_id: " + usbDevice.productId
+                            "Success get permission for device " + usbDevice!!.deviceId + ", vendor_id: " + usbDevice.vendorId + " product_id: " + usbDevice.productId
                         )
                         mUsbDevice = usbDevice
                     } else {
