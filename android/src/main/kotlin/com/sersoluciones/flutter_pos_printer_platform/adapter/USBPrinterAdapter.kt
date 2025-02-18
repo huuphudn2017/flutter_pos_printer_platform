@@ -34,7 +34,11 @@ class USBPrinterAdapter private constructor() {
         }
         val filter = IntentFilter(ACTION_USB_PERMISSION)
         filter.addAction(UsbManager.ACTION_USB_DEVICE_DETACHED)
-        mContext!!.registerReceiver(mUsbDeviceReceiver, filter)
+        if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.TIRAMISU) {
+            mContext!!.registerReceiver(mUsbDeviceReceiver, filter, Context.RECEIVER_NOT_EXPORTED)
+        } else {
+            mContext!!.registerReceiver(mUsbDeviceReceiver, filter)
+        }   
         Log.v(LOG_TAG, "ESC/POS Printer initialized")
     }
 
@@ -48,12 +52,12 @@ class USBPrinterAdapter private constructor() {
                     if (intent.getBooleanExtra(UsbManager.EXTRA_PERMISSION_GRANTED, false)) {
                         Log.i(
                             LOG_TAG,
-                            "Success get permission for device " + usbDevice!!.deviceId + ", vendor_id: " + usbDevice.vendorId + " product_id: " + usbDevice.productId
+                            "Success get permission for device " + usbDevice?.deviceId + ", vendor_id: " + usbDevice.vendorId + " product_id: " + usbDevice.productId
                         )
                         mUsbDevice = usbDevice
                     } else {
                         Toast.makeText(
-                            context, mContext?.getString(R.string.user_refuse_perm) + ": ${usbDevice!!.deviceName}",
+                            context, mContext?.getString(R.string.user_refuse_perm) + ": ${usbDevice?.deviceName}",
                             Toast.LENGTH_LONG
                         ).show()
                     }
